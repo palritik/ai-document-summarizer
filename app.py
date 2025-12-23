@@ -90,24 +90,24 @@ if st.button("🚀 Generate Summary", key="generate_summary_btn"):
     if len(text) < 200:
         st.warning("⚠️ Please provide more text for better summarization.")
     else:
-        start = time.time()
+        with st.spinner("🤖 AI is summarizing your document, please wait..."):
 
-        chunks = chunk_text(text)
-        progress = st.progress(0)
+            start = time.time()
 
-        summaries = []
-        for i, chunk in enumerate(chunks, 1):
-            summaries.append(summarize_chunk(chunk))
-            progress.progress(int((i / len(chunks)) * 100))
+            # limit chunks for faster response
+            chunks = chunk_text(text)[:5]
+            progress = st.progress(0)
 
-        total_time = round(time.time() - start, 2)
+            summaries = []
+
+            for i, chunk in enumerate(chunks, 1):
+                summary = summarize_chunk(chunk)
+                summaries.append(summary)
+                progress.progress(int((i / len(chunks)) * 100))
+
+            total_time = round(time.time() - start, 2)
 
         st.success("✅ Summary generated successfully!")
-
-        col1, col2, col3 = st.columns(3)
-        col1.metric("⏱ Time", f"{total_time}s")
-        col2.metric("📄 Chunks", len(chunks))
-        col3.metric("📝 Length", len(text))
 
         st.subheader("🔹 Summary")
         st.write(" ".join(summaries))
@@ -116,4 +116,3 @@ if st.button("🚀 Generate Summary", key="generate_summary_btn"):
         for i, point in enumerate(extract_key_points(text), 1):
             st.write(f"{i}. {point}")
 
-st.markdown("</div>", unsafe_allow_html=True)
