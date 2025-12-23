@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-streamlit
-=======
-streamlit
-transformers
-torch
-nltk
-PyPDF2
-sentencepiece
->>>>>>> 9128aa8 (Initial commit: AI Document Summarizer)
+streamlit==1.32.2
+transformers==4.38.2
+torch==2.0.1
+sentencepiece==0.1.99
+nltk==3.8.1
+PyPDF2==3.0.1
