@@ -1,19 +1,58 @@
-# 🎈 Blank app template
+📄 AI Document Summarizer
 
-A simple Streamlit app template for you to modify!
+An AI-powered Document Summarizer built using Python, Streamlit, and NLP, capable of generating meaningful summaries and key points from TXT, PDF files, or pasted text.
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://blank-app-template.streamlit.app/)
+This project combines abstractive summarization (AI) with a reliable fallback mechanism, ensuring results are always produced even when cloud AI services are unavailable.
 
-### How to run it on your own machine
+🚀 Features
 
-1. Install the requirements
+📂 Upload TXT or PDF documents
 
-   ```
-   $ pip install -r requirements.txt
-   ```
+✍️ Paste raw text directly (no file needed)
 
-2. Run the app
+🤖 AI-generated abstractive summaries
 
-   ```
-   $ streamlit run streamlit_app.py
-   ```
+🧠 Automatic key point extraction
+
+🔄 Smart fallback summarization (never empty output)
+
+📊 Performance metrics (processing time, chunks, text length)
+
+🎨 Clean UI with background image
+
+☁️ Deployed on Streamlit Cloud
+
+🛠️ Tech Stack
+
+Python
+
+Streamlit – Web UI
+
+Hugging Face Inference API – AI summarization
+
+NLTK – Tokenization & fallback logic
+🌐 Live Demo
+
+👉 Streamlit App
+https://ai-document-summarizer-c4fd6eanlm4gjvem38rynm.streamlit.app/
+
+📊 How It Works
+
+User uploads a document or pastes text
+
+Text is split into manageable chunks
+
+Each chunk is sent to an AI summarization model
+
+If AI fails, a smart extractive fallback is used
+
+Final summary + key points are displayed
+
+PyPDF2 – PDF text extraction
+
+HTML + CSS – UI styling
+
+👤 Author
+
+Ritik Pal
+GitHub: https://github.com/palritik
