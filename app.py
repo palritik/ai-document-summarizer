@@ -28,40 +28,40 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def load_css():
     css = """
-    .main-card {
-        background: rgba(255, 255, 255, 0.92);
-        padding: 2.5rem;
-        border-radius: 18px;
-        max-width: 900px;
-        margin: 2.5rem auto;   /* 🔥 spacing fix */
-        box-shadow: 0px 12px 35px rgba(0,0,0,0.25);
-    }
+    # .main-card {
+    #     background: rgba(255, 255, 255, 0.92);
+    #     padding: 2.5rem;
+    #     border-radius: 18px;
+    #     max-width: 900px;
+    #     margin: 2.5rem auto;   /* 🔥 spacing fix */
+    #     box-shadow: 0px 12px 35px rgba(0,0,0,0.25);
+    # }
 
-    h1 {
-        text-align: center;
-        margin-bottom: 0.3rem;
-    }
+    # h1 {
+    #     text-align: center;
+    #     margin-bottom: 0.3rem;
+    # }
 
-    p.subtitle {
-        text-align: center;
-        font-size: 1.05rem;
-        margin-bottom: 2rem;
-        color: #333;
-    }
+    # p.subtitle {
+    #     text-align: center;
+    #     font-size: 1.05rem;
+    #     margin-bottom: 2rem;
+    #     color: #333;
+    # }
 
-    textarea {
-        margin-top: 1rem;
-        margin-bottom: 1.5rem;
-    }
+    # textarea {
+    #     margin-top: 1rem;
+    #     margin-bottom: 1.5rem;
+    # }
 
-    .stFileUploader {
-        margin-bottom: 1.5rem;
-    }
+    # .stFileUploader {
+    #     margin-bottom: 1.5rem;
+    # }
 
-    .stButton {
-        margin-top: 1.2rem;
-    }
-    """
+    # .stButton {
+    #     margin-top: 1.2rem;
+    # }
+    # """
     st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 
@@ -91,7 +91,7 @@ def add_bg():
 
 add_bg()
 
-# ---------------- HERO ----------------
+# ---------------- HERO + MAIN CARD ----------------
 st.markdown("""
 <h1>📄 AI Document Summarizer</h1>
 <p class="subtitle">
@@ -99,9 +99,6 @@ Paste text or upload a document to generate a summary and key points.
 </p>
 <div class="main-card">
 """, unsafe_allow_html=True)
-
-
-st.markdown("</div>", unsafe_allow_html=True)
 
 # ---------------- INPUT ----------------
 user_text = st.text_area(
@@ -140,6 +137,9 @@ if st.button("🚀 Generate Summary", key="generate_btn"):
         st.session_state.final_text = current_text
         st.session_state.run = True
         st.session_state.result = None
+
+# 🔴 CLOSE MAIN CARD (ONLY ONCE)
+st.markdown("</div>", unsafe_allow_html=True)
 
 # ---------------- HF API CONFIG ----------------
 API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
@@ -232,4 +232,3 @@ if st.session_state.result:
     for i, p in enumerate(st.session_state.result["points"], 1):
         st.write(f"{i}. {p}")
 
-st.markdown("</div>", unsafe_allow_html=True)
