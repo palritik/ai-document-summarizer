@@ -1,0 +1,12 @@
+Artificial Intelligence (AI) is a rapidly evolving field of computer science
+that focuses on creating systems capable of performing tasks that normally
+require human intelligence. These tasks include learning from data, recognizing
+patterns, understanding natural language, making decisions, and solving problems.
+
+AI is widely used in many industries such as healthcare, finance, education,
+transportation, and manufacturing. In healthcare, AI helps in disease diagnosis
+and medical image analysis. In finance, AI is used for fraud detection, credit
+scoring, and algorithmic trading.
+
+AI continues to grow rapidly and is transforming the way businesses operate
+and how people interact with technology across the world.

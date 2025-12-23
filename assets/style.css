@@ -1,0 +1,58 @@
+/* ---------- HERO ---------- */
+.hero-title {
+    text-align: center;
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 0.4rem;
+    color: #0f1b1b;
+}
+
+.hero-desc {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
+    color: #0f1b1b;
+}
+
+/* ---------- SECTION HEADINGS ---------- */
+.section-title {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 0.6rem;
+    color: #111827;
+}
+
+/* ---------- TEXT AREA ---------- */
+textarea {
+    max-width: 750px;
+    margin: auto;
+    display: block;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    color: #111827 !important;
+    border-radius: 12px !important;
+}
+
+/* ---------- FILE UPLOAD ---------- */
+.stFileUploader {
+    max-width: 750px;
+    margin: auto;
+}
+
+/* ---------- BUTTON ---------- */
+.stButton > button {
+    display: block;
+    margin: 2.5rem auto;
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: white;
+    border-radius: 25px;
+    padding: 0.6rem 2.2rem;
+    font-size: 16px;
+    border: none;
+}
+
+.stButton > button:hover {
+    background: linear-gradient(135deg, #4f46e5, #4338ca);
+}

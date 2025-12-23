@@ -1,0 +1,10 @@
+<<<<<<< HEAD
+streamlit
+=======
+streamlit
+transformers
+torch
+nltk
+PyPDF2
+sentencepiece
+>>>>>>> 9128aa8 (Initial commit: AI Document Summarizer)
