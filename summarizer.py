@@ -1,6 +1,5 @@
 import requests
 import os
-import time
 
 API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
 
@@ -27,16 +26,42 @@ def chunk_text(text, max_length=700):
 
 
 def summarize_chunk(chunk):
-    response = requests.post(
-        API_URL,
-        headers=HEADERS,
-        json={"inputs": chunk, "options": {"wait_for_model": True}},
-        timeout=60
-    )
+    try:
+        payload = {
+            "inputs": chunk,
+            "parameters": {
+                "min_length": 80,     # 🔥 IMPORTANT
+                "max_length": 200,    # 🔥 IMPORTANT
+                "do_sample": False
+            },
+            "options": {
+                "wait_for_model": True
+            }
+        }
 
-    result = response.json()
+        response = requests.post(
+            API_URL,
+            headers=HEADERS,
+            json=payload,
+            timeout=60
+        )
 
-    if isinstance(result, list) and "summary_text" in result[0]:
-        return result[0]["summary_text"]
+        if response.status_code != 200:
+            return ""
 
-    return ""
+        result = response.json()
+
+        # ✅ Handle all valid HF response formats
+        if isinstance(result, list):
+            if "summary_text" in result[0]:
+                return result[0]["summary_text"]
+            if "generated_text" in result[0]:
+                return result[0]["generated_text"]
+
+        return ""
+
+    except requests.exceptions.Timeout:
+        return "[⏳ Model is warming up, please try again]"
+
+    except Exception as e:
+        return ""
