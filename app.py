@@ -5,8 +5,16 @@ import requests
 import nltk
 from nltk.tokenize import sent_tokenize
 import PyPDF2
-from fpdf import FPDF  # For PDF generation
+from fpdf import FPDF
 from io import BytesIO
+
+# Helper to insert break opportunities in long words
+def insert_breaks(text, max_word_len=20):
+    import re
+    def add_breaks(match):
+        word = match.group()
+        return '\u200b'.join([word[i:i+max_word_len] for i in range(0, len(word), max_word_len)])
+    return re.sub(r'\S{' + str(max_word_len+1) + r',}', add_breaks, text)
 
 # ---------------- DOWNLOAD NLTK DATA ----------------
 nltk.download("punkt", quiet=True)
@@ -192,10 +200,11 @@ if st.session_state.result:
         pdf.ln(10)
 
         if summary_text:
+            safe_summary = insert_breaks(summary_text)
             pdf.set_font("Helvetica", 'B', 14)
             pdf.cell(0, 10, "Summary", ln=True)
             pdf.set_font("Helvetica", '', 12)
-            pdf.multi_cell(0, 8, summary_text)
+            pdf.multi_cell(0, 8, safe_summary)
             pdf.ln(10)
 
         if key_points:
@@ -203,7 +212,8 @@ if st.session_state.result:
             pdf.cell(0, 10, "Key Points", ln=True)
             pdf.set_font("Helvetica", '', 12)
             for i, point in enumerate(key_points, 1):
-                pdf.multi_cell(0, 8, f"{i}. {point}")
+                safe_point = insert_breaks(f"{i}. {point}")
+                pdf.multi_cell(0, 8, safe_point)
 
         buffer = BytesIO()
         pdf.output(buffer)
