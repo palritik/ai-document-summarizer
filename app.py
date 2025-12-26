@@ -116,7 +116,7 @@ with st.form(key="input_form"):
         type=["txt", "pdf"]
     )
 
-    submit_button = st.form_submit_button("🚀 Generate Summary")
+    # submit_button = st.form_submit_button("🚀 Generate Summary")
 
 # Replace the old if st.button block with:
 if submit_button:
