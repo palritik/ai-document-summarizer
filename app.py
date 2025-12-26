@@ -9,7 +9,23 @@ from fpdf import FPDF
 from io import BytesIO
 import re
 
-# Helper to insert break opportunities in long words (prevents previous overflow error)
+# Helper: Clean common problematic Unicode characters
+def clean_text_for_pdf(text):
+    replacements = {
+        "\u2013": "-",  # en-dash
+        "\u2014": "-",  # em-dash
+        "\u2018": "'",  # left single quote
+        "\u2019": "'",  # right single quote
+        "\u201c": '"',  # left double quote
+        "\u201d": '"',  # right double quote
+        "\u2026": "...", # ellipsis
+        "\u00a0": " ",  # non-breaking space
+    }
+    for bad, good in replacements.items():
+        text = text.replace(bad, good)
+    return text
+
+# Helper: Insert breaks for long words (prevents overflow)
 def insert_breaks(text, max_word_len=20):
     def add_breaks(match):
         word = match.group()
@@ -195,29 +211,26 @@ if st.session_state.result:
     def create_pdf(title, summary_text=None, key_points=None):
         pdf = FPDF()
         pdf.add_page()
-
-        # Use DejaVuSans (Unicode font included with fpdf2)
-        pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)  # Regular
-        pdf.add_font("DejaVu", "B", "DejaVuSans-Bold.ttf", uni=True)  # Bold
-
-        pdf.set_font("DejaVu", 'B', 16)
+        pdf.set_font("Helvetica", 'B', 16)
         pdf.cell(0, 10, "AI Document Summary", ln=True, align='C')
         pdf.ln(10)
 
         if summary_text:
-            safe_summary = insert_breaks(summary_text)
-            pdf.set_font("DejaVu", 'B', 14)
+            clean_summary = clean_text_for_pdf(summary_text)
+            safe_summary = insert_breaks(clean_summary)
+            pdf.set_font("Helvetica", 'B', 14)
             pdf.cell(0, 10, "Summary", ln=True)
-            pdf.set_font("DejaVu", '', 12)
+            pdf.set_font("Helvetica", '', 12)
             pdf.multi_cell(0, 8, safe_summary)
             pdf.ln(10)
 
         if key_points:
-            pdf.set_font("DejaVu", 'B', 14)
+            pdf.set_font("Helvetica", 'B', 14)
             pdf.cell(0, 10, "Key Points", ln=True)
-            pdf.set_font("DejaVu", '', 12)
+            pdf.set_font("Helvetica", '', 12)
             for i, point in enumerate(key_points, 1):
-                safe_point = insert_breaks(f"{i}. {point}")
+                clean_point = clean_text_for_pdf(point)
+                safe_point = insert_breaks(f"{i}. {clean_point}")
                 pdf.multi_cell(0, 8, safe_point)
 
         buffer = BytesIO()
