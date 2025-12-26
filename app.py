@@ -5,32 +5,11 @@ import requests
 import nltk
 from nltk.tokenize import sent_tokenize
 import PyPDF2
-from fpdf import FPDF
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
 from io import BytesIO
-import re
-
-# Helper: Clean common problematic Unicode characters
-def clean_text_for_pdf(text):
-    replacements = {
-        "\u2013": "-",  # en-dash
-        "\u2014": "-",  # em-dash
-        "\u2018": "'",  # left single quote
-        "\u2019": "'",  # right single quote
-        "\u201c": '"',  # left double quote
-        "\u201d": '"',  # right double quote
-        "\u2026": "...", # ellipsis
-        "\u00a0": " ",  # non-breaking space
-    }
-    for bad, good in replacements.items():
-        text = text.replace(bad, good)
-    return text
-
-# Helper: Insert breaks for long words (prevents overflow)
-def insert_breaks(text, max_word_len=20):
-    def add_breaks(match):
-        word = match.group()
-        return '\u200b'.join([word[i:i+max_word_len] for i in range(0, len(word), max_word_len)])
-    return re.sub(r'\S{' + str(max_word_len+1) + r',}', add_breaks, text)
 
 # ---------------- DOWNLOAD NLTK DATA ----------------
 nltk.download("punkt", quiet=True)
@@ -205,42 +184,46 @@ if st.session_state.result:
     for i, p in enumerate(st.session_state.result["points"], 1):
         st.write(f"{i}. {p}")
 
-    # ---------------- PDF GENERATION & DOWNLOAD ----------------
+    # ---------------- PDF GENERATION & DOWNLOAD (ReportLab) ----------------
     st.markdown("### 📥 Download Your Summary (PDF)")
 
-    def create_pdf(title, summary_text=None, key_points=None):
-        pdf = FPDF()
-        pdf.add_page()
-        pdf.set_font("Helvetica", 'B', 16)
-        pdf.cell(0, 10, "AI Document Summary", ln=True, align='C')
-        pdf.ln(10)
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle(
+        'CustomTitle',
+        parent=styles['Title'],
+        fontSize=18,
+        spaceAfter=30,
+        alignment=1  # Center
+    )
 
-        if summary_text:
-            clean_summary = clean_text_for_pdf(summary_text)
-            safe_summary = insert_breaks(clean_summary)
-            pdf.set_font("Helvetica", 'B', 14)
-            pdf.cell(0, 10, "Summary", ln=True)
-            pdf.set_font("Helvetica", '', 12)
-            pdf.multi_cell(0, 8, safe_summary)
-            pdf.ln(10)
+    heading_style = styles['Heading2']
+    normal_style = styles['Normal']
 
-        if key_points:
-            pdf.set_font("Helvetica", 'B', 14)
-            pdf.cell(0, 10, "Key Points", ln=True)
-            pdf.set_font("Helvetica", '', 12)
-            for i, point in enumerate(key_points, 1):
-                clean_point = clean_text_for_pdf(point)
-                safe_point = insert_breaks(f"{i}. {clean_point}")
-                pdf.multi_cell(0, 8, safe_point)
-
+    def create_pdf(filename, include_summary=True, include_points=True):
         buffer = BytesIO()
-        pdf.output(buffer)
+        doc = SimpleDocTemplate(buffer, pagesize=letter, topMargin=1*inch, bottomMargin=1*inch)
+        story = []
+
+        story.append(Paragraph("AI Document Summary", title_style))
+        story.append(Spacer(1, 0.5*inch))
+
+        if include_summary:
+            story.append(Paragraph("Summary", heading_style))
+            story.append(Paragraph(st.session_state.result["summary"].replace("\n", "<br/>"), normal_style))
+            story.append(Spacer(1, 0.3*inch))
+
+        if include_points:
+            story.append(Paragraph("Key Points", heading_style))
+            for i, point in enumerate(st.session_state.result["points"], 1):
+                story.append(Paragraph(f"{i}. {point.replace('\n', '<br/>')}", normal_style))
+
+        doc.build(story)
         buffer.seek(0)
         return buffer.getvalue()
 
-    summary_pdf = create_pdf("Summary", summary_text=st.session_state.result["summary"])
-    points_pdf = create_pdf("Key Points", key_points=st.session_state.result["points"])
-    full_pdf = create_pdf("Full Summary", summary_text=st.session_state.result["summary"], key_points=st.session_state.result["points"])
+    summary_pdf = create_pdf("summary.pdf", include_summary=True, include_points=False)
+    points_pdf = create_pdf("key_points.pdf", include_summary=False, include_points=True)
+    full_pdf = create_pdf("full_summary.pdf", include_summary=True, include_points=True)
 
     col_d1, col_d2, col_d3 = st.columns(3)
 
