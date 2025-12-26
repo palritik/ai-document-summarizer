@@ -101,33 +101,32 @@ Paste text or upload a document to generate a summary and key points.
 """, unsafe_allow_html=True)
 
 # ---------------- INPUT ----------------
-user_text = st.text_area(
-    "Paste text",
-    label_visibility="collapsed",
-    height=200,
-    placeholder="Paste your content here if you don't have a file..."
-)
+# ---------------- INPUT ----------------
+with st.form(key="input_form"):
+    user_text = st.text_area(
+        "Paste text",
+        label_visibility="collapsed",
+        height=200,
+        placeholder="Paste your content here if you don't have a file..."
+    )
 
-uploaded_file = st.file_uploader(
-    "Upload document",
-    label_visibility="collapsed",
-    type=["txt", "pdf"]
-)
+    uploaded_file = st.file_uploader(
+        "Upload document",
+        label_visibility="collapsed",
+        type=["txt", "pdf"]
+    )
 
-current_text = ""
+    submit_button = st.form_submit_button("🚀 Generate Summary")
 
-if user_text.strip():
-    current_text = user_text.strip()
-
-elif uploaded_file:
-    if uploaded_file.type == "text/plain":
-        current_text = uploaded_file.read().decode("utf-8")
+# Replace the old if st.button block with:
+if submit_button:
+    # (keep your existing code to build current_text and check length)
+    if len(current_text) < 200:
+        st.warning("⚠️ Please provide at least 200 characters.")
     else:
-        reader = PyPDF2.PdfReader(uploaded_file)
-        for page in reader.pages:
-            text = page.extract_text()
-            if text:
-                current_text += text + " "
+        st.session_state.final_text = current_text
+        st.session_state.run = True
+        st.session_state.result = None
 
 # ---------------- BUTTON ----------------
 if st.button("🚀 Generate Summary", key="generate_btn"):
