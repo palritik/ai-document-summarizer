@@ -13,6 +13,7 @@ from io import BytesIO
 
 # ---------------- DOWNLOAD NLTK DATA ----------------
 nltk.download("punkt", quiet=True)
+nltk.download("punkt_tab", quiet=True)  # Add this line
 
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(page_title="AI Document Summarizer", layout="centered")
