@@ -2,3 +2,4 @@ streamlit==1.32.2
 requests==2.31.0
 nltk==3.8.1
 PyPDF2==3.0.1
+fpdf2

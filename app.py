@@ -5,6 +5,8 @@ import requests
 import nltk
 from nltk.tokenize import sent_tokenize
 import PyPDF2
+from fpdf import FPDF  # For PDF generation
+from io import BytesIO
 
 # ---------------- DOWNLOAD NLTK DATA ----------------
 nltk.download("punkt", quiet=True)
@@ -178,3 +180,65 @@ if st.session_state.result:
     st.markdown("### 🔹 Key Points")
     for i, p in enumerate(st.session_state.result["points"], 1):
         st.write(f"{i}. {p}")
+
+    # ---------------- PDF GENERATION & DOWNLOAD ----------------
+    st.markdown("### 📥 Download Your Summary (PDF)")
+
+    def create_pdf(title, summary_text=None, key_points=None):
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Helvetica", 'B', 16)
+        pdf.cell(0, 10, "AI Document Summary", ln=True, align='C')
+        pdf.ln(10)
+
+        if summary_text:
+            pdf.set_font("Helvetica", 'B', 14)
+            pdf.cell(0, 10, "Summary", ln=True)
+            pdf.set_font("Helvetica", '', 12)
+            pdf.multi_cell(0, 8, summary_text)
+            pdf.ln(10)
+
+        if key_points:
+            pdf.set_font("Helvetica", 'B', 14)
+            pdf.cell(0, 10, "Key Points", ln=True)
+            pdf.set_font("Helvetica", '', 12)
+            for i, point in enumerate(key_points, 1):
+                pdf.multi_cell(0, 8, f"{i}. {point}")
+
+        buffer = BytesIO()
+        pdf.output(buffer)
+        buffer.seek(0)
+        return buffer.getvalue()
+
+    summary_pdf = create_pdf("Summary", summary_text=st.session_state.result["summary"])
+    points_pdf = create_pdf("Key Points", key_points=st.session_state.result["points"])
+    full_pdf = create_pdf("Full Summary", summary_text=st.session_state.result["summary"], key_points=st.session_state.result["points"])
+
+    col_d1, col_d2, col_d3 = st.columns(3)
+
+    with col_d1:
+        st.download_button(
+            label="📄 Download Summary PDF",
+            data=summary_pdf,
+            file_name="summary.pdf",
+            mime="application/pdf",
+            use_container_width=True
+        )
+
+    with col_d2:
+        st.download_button(
+            label="🔹 Download Key Points PDF",
+            data=points_pdf,
+            file_name="key_points.pdf",
+            mime="application/pdf",
+            use_container_width=True
+        )
+
+    with col_d3:
+        st.download_button(
+            label="📑 Download Full PDF",
+            data=full_pdf,
+            file_name="full_summary.pdf",
+            mime="application/pdf",
+            use_container_width=True
+        )
