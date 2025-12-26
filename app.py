@@ -89,7 +89,7 @@ def add_bg():
         unsafe_allow_html=True
     )
 
-add_bg()
+# add_bg()
 
 # ---------------- HERO + MAIN CARD ----------------
 st.markdown("""
@@ -100,7 +100,6 @@ Paste text or upload a document to generate a summary and key points.
 <div class="main-card">
 """, unsafe_allow_html=True)
 
-# ---------------- INPUT ----------------
 # ---------------- INPUT ----------------
 with st.form(key="input_form"):
     user_text = st.text_area(
@@ -116,11 +115,24 @@ with st.form(key="input_form"):
         type=["txt", "pdf"]
     )
 
-    # submit_button = st.form_submit_button("🚀 Generate Summary")
+    submit_button = st.form_submit_button("🚀 Generate Summary")
 
-# Replace the old if st.button block with:
+# Move the text processing and session state logic OUTSIDE the form
+current_text = ""
+
+if user_text.strip():
+    current_text = user_text.strip()
+elif uploaded_file:
+    if uploaded_file.type == "text/plain":
+        current_text = uploaded_file.read().decode("utf-8")
+    else:
+        reader = PyPDF2.PdfReader(uploaded_file)
+        for page in reader.pages:
+            text = page.extract_text()
+            if text:
+                current_text += text + " "
+
 if submit_button:
-    # (keep your existing code to build current_text and check length)
     if len(current_text) < 200:
         st.warning("⚠️ Please provide at least 200 characters.")
     else:
