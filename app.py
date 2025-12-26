@@ -24,70 +24,70 @@ if "result" not in st.session_state:
     st.session_state.result = None
 
 # ---------------- LOAD CSS ----------------
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-def load_css():
-    css = """
-    # .main-card {
-    #     background: rgba(255, 255, 255, 0.92);
-    #     padding: 2.5rem;
-    #     border-radius: 18px;
-    #     max-width: 900px;
-    #     margin: 2.5rem auto;   /* 🔥 spacing fix */
-    #     box-shadow: 0px 12px 35px rgba(0,0,0,0.25);
-    # }
+# def load_css():
+#     css = """
+#     # .main-card {
+#     #     background: rgba(255, 255, 255, 0.92);
+#     #     padding: 2.5rem;
+#     #     border-radius: 18px;
+#     #     max-width: 900px;
+#     #     margin: 2.5rem auto;   /* 🔥 spacing fix */
+#     #     box-shadow: 0px 12px 35px rgba(0,0,0,0.25);
+#     # }
 
-    # h1 {
-    #     text-align: center;
-    #     margin-bottom: 0.3rem;
-    # }
+#     # h1 {
+#     #     text-align: center;
+#     #     margin-bottom: 0.3rem;
+#     # }
 
-    # p.subtitle {
-    #     text-align: center;
-    #     font-size: 1.05rem;
-    #     margin-bottom: 2rem;
-    #     color: #333;
-    # }
+#     # p.subtitle {
+#     #     text-align: center;
+#     #     font-size: 1.05rem;
+#     #     margin-bottom: 2rem;
+#     #     color: #333;
+#     # }
 
-    # textarea {
-    #     margin-top: 1rem;
-    #     margin-bottom: 1.5rem;
-    # }
+#     # textarea {
+#     #     margin-top: 1rem;
+#     #     margin-bottom: 1.5rem;
+#     # }
 
-    # .stFileUploader {
-    #     margin-bottom: 1.5rem;
-    # }
+#     # .stFileUploader {
+#     #     margin-bottom: 1.5rem;
+#     # }
 
-    # .stButton {
-    #     margin-top: 1.2rem;
-    # }
-    # """
-    st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+#     # .stButton {
+#     #     margin-top: 1.2rem;
+#     # }
+#     # """
+#     st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 
-load_css()
+# # load_css()  # Test without custom styles
 
 # ---------------- BACKGROUND IMAGE ----------------
-def add_bg():
-    img_path = os.path.join(BASE_DIR, "assets", "bg.jpg")
-    if not os.path.exists(img_path):
-        return
-    with open(img_path, "rb") as f:
-        encoded = base64.b64encode(f.read()).decode()
-    st.markdown(
-        f"""
-        <style>
-        .stApp {{
-            background-image:
-            linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
-            url("data:image/jpg;base64,{encoded}");
-            background-size: cover;
-            background-attachment: fixed;
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+# def add_bg():
+#     img_path = os.path.join(BASE_DIR, "assets", "bg.jpg")
+#     if not os.path.exists(img_path):
+#         return
+#     with open(img_path, "rb") as f:
+#         encoded = base64.b64encode(f.read()).decode()
+#     st.markdown(
+#         f"""
+#         <style>
+#         .stApp {{
+#             background-image:
+#             linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+#             url("data:image/jpg;base64,{encoded}");
+#             background-size: cover;
+#             background-attachment: fixed;
+#         }}
+#         </style>
+#         """,
+#         unsafe_allow_html=True
+#     )
 
 # add_bg()
 
