@@ -1,0 +1,7 @@
+streamlit
+requests
+nltk
+PyPDF2
+python-docx
+gtts
+langdetect
